@@ -1,0 +1,128 @@
+import java.util.NoSuchElementException;
+ 
+public class Main {
+    public static void main(String[] args) {
+        var list = new LinkedList();
+        list.addLast(10);
+        list.addLast(20);
+        list.addLast(30);
+        list.addLast(40);
+        list.addFirst(5);
+ 
+        System.out.println("LinkedList after adding: " + list);
+ 
+        list.removeFirst();
+        list.removeLast();
+ 
+        System.out.println("LinkedList after removing: " + list);
+ 
+        System.out.println("Index element 20:" +list.indexOf(20));
+        System.out.println("LinkedList contains element 10:" + list.contains(10));
+    }
+ 
+    public static class LinkedList {
+        public class Node {
+            private int value;
+            private Node next;
+ 
+            public Node(int value) {
+                this.value = value;
+            }
+        }
+ 
+        private Node first;
+        private Node last;
+ 
+        public void addLast(int item) {
+            var node = new Node(item);
+ 
+            if (isEmpty()) {
+                first = last = node;
+            } else {
+                last.next = node;
+                last = node;
+            }
+        }
+ 
+        public void addFirst(int item) {
+            var node = new Node(item);
+ 
+            if (isEmpty()) {
+                first = last = node;
+            } else {
+                node.next = first;
+                first = node;
+            }
+        }
+ 
+        private boolean isEmpty() {
+            return first == null;
+        }
+ 
+        public int indexOf(int item) {
+            int index = 0;
+            var current = first;
+            while (current != null) {
+                if (current.value == item) return index;
+                current = current.next;
+                index++;
+            }
+            return -1;
+        }
+ 
+        public boolean contains(int item) {
+            return indexOf(item) != -1;
+        }
+ 
+        public void removeFirst() {
+            if (isEmpty())
+                throw new NoSuchElementException();
+ 
+            if (first == last) {
+                first = last = null;
+                return;
+            }
+ 
+            var second = first.next;
+            first.next = null;
+            first = second;
+        }
+ 
+        public void removeLast() {
+            if (isEmpty())
+                throw new NoSuchElementException();
+ 
+            if (first == last) {
+                first = last = null;
+                return;
+            }
+ 
+            var previous = getPrevious(last);
+            last = previous;
+            last.next = null;
+        }
+ 
+        private Node getPrevious(Node node) {
+            var current = first;
+            while (current != null) {
+                if (current.next == node) return current;
+                current = current.next;
+            }
+            return null;
+        }
+ 
+        public String toString() {
+            StringBuilder result = new StringBuilder("[");
+            var current = first;
+            while (current != null) {
+                result.append(current.value);
+                if (current.next != null) {
+                    result.append(", ");
+                }
+                current = current.next;
+            }
+            result.append("]");
+            return result.toString();
+        }
+    }
+}
